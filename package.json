@@ -1,0 +1,29 @@
+{
+  "name": "@sec-block/secjs-gui",
+  "version": "1.0.0",
+  "description": "sec gui for wallet based on electron js",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/MongoX-SEC/secjs-gui.git"
+  },
+  "keywords": [
+    "secjs",
+    "sec-block",
+    "secjs-gui",
+    "wallet"
+  ],
+  "author": "MongoX",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/MongoX-SEC/secjs-gui/issues"
+  },
+  "homepage": "https://gitlab.com/MongoX-SEC/secjs-gui#README",
+  "devDependencies": {
+    "electron": "^2.0.3"
+  }
+}
