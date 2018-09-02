@@ -1,24 +1,10 @@
 <template>
-  <!-- <div id="app" class="container">  
-    <section>
-        <b-tabs v-model="activeTab">
-          <b-tab-item label='Account'>
-            <div class='block'>
-              <user-login></user-login>
-            </div>
-            <div>
-              
-            </div>
-          </b-tab-item>
-          <b-tab-item label='Wallet'>
-          </b-tab-item>
-        </b-tabs>
-    </section>
-  </div> -->
   <v-tabs
   color="cyan"
   dark
   slider-color="yellow"
+  centered
+  height="80%"
 >
   <v-tab ripple>
     Wallet
@@ -31,7 +17,7 @@
   </v-tab-item>
   <v-tab-item>
     <send-fund></send-fund>
-  </v-tab-item>  
+  </v-tab-item>
 </v-tabs>
 </template>
 
@@ -40,8 +26,6 @@
 import Vue from "vue"
 import Vuetify from "vuetify"
 import "vuetify/dist/vuetify.min.css"
-import UserLogin from "./UserLogin"
-import SendFund from './SendFund'
 
 Vue.use(Vuetify, {
   iconfont: "mdi"
@@ -58,8 +42,7 @@ export default {
     }
   },
   components: {
-    UserLogin,
-    SendFund
+    
   },
   data() {
     return {

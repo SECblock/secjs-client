@@ -16,6 +16,11 @@ export default new Router({
       component: require('@/components/UserAccount').default
     },
     {
+      path: '/transactions',
+      name: 'transaction-history',
+      component: require('@/components/TransactionHistory').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

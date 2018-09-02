@@ -1,34 +1,57 @@
 <template>
-  <!-- <div id="app">
-    <menu-header></menu-header>
-    <router-view></router-view>
-  </div> -->
+  <div>
   <v-app>
-    <v-container fluid>
-      <v-flex align-center>
-        <menu-header></menu-header>
+      <v-content fill-height>
+      <v-flex xs12 md12 sm12>
+        <v-tabs
+  color="cyan"
+  dark
+  slider-color="yellow"
+  centered
+  height="80%"
+>
+  <v-tab ripple>
+    Wallet
+  </v-tab>
+  <v-tab ripple>
+    Send Fund
+  </v-tab>
+  <v-tab-item>
+    <router-view></router-view>
+  </v-tab-item>
+  <v-tab-item>
+    <send-fund></send-fund>
+  </v-tab-item>
+</v-tabs>
       </v-flex>
-    </v-container>
-  </v-app>  
+      </v-content>
+  </v-app>
+  </div>
 </template>
 
 <script>
 import Vue from "vue";
-import Buefy from "buefy";
-import "buefy/lib/buefy.css";
+import UserLogin from "./components/UserLogin"
+import SendFund from './components/SendFund'
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 
-Vue.use(Buefy);
 Vue.use(Vuetify, {
   iconfont: "mdi"
-});
+})
 
-import MenuHeader from "./components/MenuHeader";
 export default {
   name: "webapp",
   components: {
-    MenuHeader
+    UserLogin,
+    SendFund
+  },
+  data() {
+    return {
+      activeTab: 0,
+      activeSubTab: 0,
+      showBooks: false
+    }
   }
 }
 </script>
