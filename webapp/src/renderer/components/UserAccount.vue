@@ -1,8 +1,9 @@
 <template>
 <v-content>
       <v-container grid-list-xs>
-        <v-layout column d-flex>
-          <v-flex xs12 v-for= "(wallet, item) in userWallets" :key= "item" align-center>
+        <v-layout column justify-space-around>
+          <v-layout row v-for= "(wallet, item) in userWallets" :key= "item" justify-center>
+            <v-flex xs5>
             <v-card color="primary">
               <v-list>
                   <v-list-group prepend-icon="local_activity" no-action>
@@ -18,6 +19,8 @@
               </v-list>
             </v-card>
           </v-flex>
+          </v-layout>
+          
           
         </v-layout>
       </v-container>
