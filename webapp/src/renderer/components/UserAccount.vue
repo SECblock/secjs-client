@@ -22,11 +22,11 @@
         </v-layout>
       </v-container>
       <v-btn fab bottom right fixed dark color="red accent-3" @click= "userLogOut">
-                <v-icon>chevron_left</v-icon>
-              </v-btn>
+        <v-icon>chevron_left</v-icon>
+      </v-btn>
       <v-btn fab bottom left fixed dark color="indigo" @click= "addNewWallet">
-                <v-icon dark>add</v-icon>
-              </v-btn>
+        <v-icon dark>add</v-icon>
+      </v-btn>
 </v-content>
 
 </template>

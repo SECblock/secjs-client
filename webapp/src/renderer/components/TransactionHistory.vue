@@ -1,15 +1,18 @@
 <template>
-  <div>
-    <v-data-table :headers= "headers" :items= "transactions" class="elevation-1">
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td class="text-xs-right">{{ props.item.from }}</td>
-        <td class="text-xs-right">{{ props.item.to }}</td>
-      </template>
-    </v-data-table>
-
-  </div>
-
+  <v-content>
+    <v-container>
+      <v-data-table :headers= "headers" :items= "transactions" class="elevation-1">
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.name }}</td>
+          <td class="text-xs-right">{{ props.item.from }}</td>
+          <td class="text-xs-right">{{ props.item.to }}</td>
+        </template>
+      </v-data-table>
+    </v-container>
+    <v-btn fab bottom right fixed dark color="red accent-3" @click= "navBack">
+      <v-icon>chevron_left</v-icon>
+    </v-btn>
+  </v-content>
 </template>
 
 
@@ -54,6 +57,11 @@ export default {
           to: "afei"
         }
       ]
+    }
+  },
+  methods: {
+    navBack() {
+      this.$router.go(-1)
     }
   }
 }
