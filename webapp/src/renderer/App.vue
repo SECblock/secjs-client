@@ -30,14 +30,21 @@
 </template>
 
 <script>
-import Vue from "vue";
-import UserLogin from "./components/UserLogin"
+import Vue from 'vue'
+import UserLogin from './components/UserLogin'
 import SendFund from './components/SendFund'
-import Vuetify from "vuetify";
-import "vuetify/dist/vuetify.min.css";
+import Vuetify from "vuetify"
+import "vuetify/dist/vuetify.min.css"
+
+import JsonRPCClient from './lib/jayson-rpc-vue'
 
 Vue.use(Vuetify, {
   iconfont: "mdi"
+})
+
+Vue.use(JsonRPCClient, {
+  useSSL: false,
+  url: 'http://localhost:3000'
 })
 
 export default {

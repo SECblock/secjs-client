@@ -11,6 +11,11 @@
                   <v-text-field id="password" v-model = "password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
                 </v-form>
               </v-card-text>
+              <v-card-text transition="slide-y-reverse-transition" v-if = "loginError">
+                <div>
+                  Password or username is false.
+                </div>
+              </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" v-on:click = "onLoginClick">Login</v-btn>
@@ -25,26 +30,29 @@
 
 <script>
 import Vue from 'vue'
-import Vuetify from "vuetify";
-import "vuetify/dist/vuetify.min.css";
-
-Vue.use(Vuetify, {
-  iconfont: "mdi"
-});
 
 export default {
   data: () => ({
     drawer: null,
     username: '',
-    password: ''
+    password: '',
+    loginError: false
   }),
-  props: {
-    source: String
-  },
   methods: {
     onLoginClick: function(oEvent){
       if (this.username !== "" && this.password !== "") {
-        this.$router.push('login')
+        this.$JsonRPCClient.request('login', { account: this.username, password: this.password }, (err, response) => {
+          console.log(response)
+          if (err) {
+            this.loginError = true
+            return
+          }
+          if (response.result.status === 'success') {           
+            this.$router.push({name: 'user-account', params: {userpublickey: response.result.userpublickey}})
+          } else {
+            this.loginError = true
+          }
+        })
       }
     }
   }
