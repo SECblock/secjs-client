@@ -3,29 +3,27 @@
       <v-container grid-list-xs>
         <v-layout column justify-space-around>
           <v-layout row v-for= "(wallet, item) in userWallets" :key= "item" justify-center>
-            <v-flex xs5>
-            <v-card color="primary">
-              <v-list>
-                  <v-list-group prepend-icon="local_activity" no-action>
-                    <v-list-tile avatar slot="activator">
-                      <v-list-content>
-                        <v-list-tile-title>{{wallet.walletName}}</v-list-tile-title>
-                      <v-list-tile-sub-title>{{wallet.walletBalance}}</v-list-tile-sub-title>
-                      </v-list-content>
-                      
-                    </v-list-tile>
-                    <v-list-tile v-for= "(tile, i) in wallet.subListTiles" :key= "i" @click= "clicktransactions(tile, item, $event)">
-                      <v-list-tile-title v-text= "tile[0]"></v-list-tile-title>
-                      <v-list-tile-action v-if= "tile[1] === 'history' "><v-icon dark color="green">{{tile[1]}}</v-icon></v-list-tile-action>
-                      <v-list-tile-action v-if= "tile[1] === 'remove' "><v-icon dark color="red">{{tile[1]}}</v-icon></v-list-tile-action>
-                    </v-list-tile>
-                  </v-list-group>
-              </v-list>
-            </v-card>
-          </v-flex>
+            <v-flex xs10>
+              <v-card color="primary">
+                <v-list>
+                    <v-list-group prepend-icon="local_activity" no-action>
+                      <v-list-tile avatar slot="activator">
+                        <v-list-tile-content>
+                          <v-list-tile-title>{{wallet.walletName}}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{wallet.walletBalance}}</v-list-tile-sub-title>
+                        </v-list-tile-content>
+                        
+                      </v-list-tile>
+                      <v-list-tile v-for= "(tile, i) in wallet.subListTiles" :key= "i" @click= "clicktransactions(tile, wallet, $event)">
+                        <v-list-tile-title v-text= "tile[0]"></v-list-tile-title>
+                        <v-list-tile-action v-if= "tile[1] === 'history' "><v-icon dark color="green">{{tile[1]}}</v-icon></v-list-tile-action>
+                        <v-list-tile-action v-if= "tile[1] === 'remove' "><v-icon dark color="red">{{tile[1]}}</v-icon></v-list-tile-action>
+                      </v-list-tile>
+                    </v-list-group>
+                </v-list>
+              </v-card>
+            </v-flex>
           </v-layout>
-          
-          
         </v-layout>
       </v-container>
       <v-btn fab bottom right fixed dark color="red accent-3" @click= "userLogOut">
@@ -48,12 +46,13 @@ Vue.use(Vuetify, {
 
 export default {
   name: "user-account",
-  props: {
-    userpublickey: String
-  },
   data: () => ({
+    userName: '',
+    userID: '',
+    email: '',
+    telefon: '',
     subListTiles: [
-      ["Account Details", "user"],
+      ["Wallet Details", "user"],
       ["Transaction History", "history"],
       ["Remove Wallet", "remove"]
     ],
@@ -61,37 +60,43 @@ export default {
   }),
 
   created() {
+    this.userID = this.$route.params.user
+    this.userName = this.$route.query.username
+    this.email = this.$route.query.email
+    this.telefon = this.$route.query.telefon
     this.$JsonRPCClient.request(
       "getUserWallets",
-      { userPublicKey: this.userpublickey },
+      { userID: this.userID },
       (err, response) => {
         if (err) {
-          return;
+          return
         }
-        response.result.userWallets.forEach((wallet) => {
+        response.result.userWallets.forEach(wallet => {
           this.userWallets.push({
-            walletName: `Wallet ${wallet.index}`,
-            walletBalance: `Balance ${wallet.amount}`,
+            walletID: wallet.walletID,
+            walletName: `Wallet ${wallet.walletAdress}`,
+            walletBalance: `Balance ${wallet.balance}`,
             subListTiles: this.subListTiles
           })
         })
       }
-    );
+    )
   },
 
   computed: {
     iconColor() {
-      return "red";
+      return "red"
     }
   },
 
   methods: {
-    clicktransactions(tile, index, event) {
+    clicktransactions(tile, wallet, event) {
+      let walletID = wallet.walletID
       if (tile[0] === "Transaction History") {
-        this.$router.push("transactions");
+       this.$router.push({name: "transaction-history", params: {walletid: walletID}})
       } else if (tile[0] === "Remove Wallet") {
-        console.log("click" + index);
-        this.userWallets.splice(index, 1);
+        console.log("click" + index)
+        this.userWallets.splice(index, 1)
       }
     },
     userLogOut() {

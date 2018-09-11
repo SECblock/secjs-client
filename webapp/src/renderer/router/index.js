@@ -11,18 +11,15 @@ export default new Router({
       component: require('@/components/UserLogin').default
     },
     {
-      path: '/login/:userpublickey',
+      path: '/login/:user',
       name: 'user-account',
-      component: require('@/components/UserAccount').default,
-      props: true
-      // beforeRouteUpdate: (to, from, next) => {
-      //   console.log(this.$route.params)
-      // }
+      component: require('@/components/UserAccount').default
     },
     {
-      path: '/transactions',
+      path: '/transactions/:walletid',
       name: 'transaction-history',
-      component: require('@/components/TransactionHistory').default
+      component: require('@/components/TransactionHistory').default,
+      props: true
     },
     {
       path: '*',

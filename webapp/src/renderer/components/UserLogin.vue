@@ -41,14 +41,18 @@ export default {
   methods: {
     onLoginClick: function(oEvent){
       if (this.username !== "" && this.password !== "") {
-        this.$JsonRPCClient.request('login', { account: this.username, password: this.password }, (err, response) => {
+        this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
           console.log(response)
           if (err) {
             this.loginError = true
             return
           }
           if (response.result.status === 'success') {           
-            this.$router.push({name: 'user-account', params: {userpublickey: response.result.userpublickey}})
+            this.$router.push({
+              name: 'user-account', 
+              params: {user: response.result.account.userID}, 
+              query: {username: response.result.account.email, email: response.result.account.email, telefon: response.result.account.telefon}
+            })
           } else {
             this.loginError = true
           }
