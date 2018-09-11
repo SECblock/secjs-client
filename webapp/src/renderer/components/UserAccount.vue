@@ -1,7 +1,7 @@
 <template>
 <v-content>
       <v-container grid-list-xs>
-        <v-layout column justify-space-around>
+        <v-layout column>
           <v-layout row v-for= "(wallet, item) in userWallets" :key= "item" justify-center>
             <v-flex xs10>
               <v-card color="primary">
@@ -9,8 +9,8 @@
                     <v-list-group prepend-icon="local_activity" no-action>
                       <v-list-tile avatar slot="activator">
                         <v-list-tile-content>
-                          <v-list-tile-title>{{wallet.walletName}}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{wallet.walletBalance}}</v-list-tile-sub-title>
+                          <v-list-tile-title>{{wallet.walletBalance}}</v-list-tile-title>
+                          <v-list-tile-sub-title class="text-truncate">{{wallet.walletName}}</v-list-tile-sub-title>
                         </v-list-tile-content>
                         
                       </v-list-tile>
