@@ -6,13 +6,12 @@
             <v-flex xs10>
               <v-card color="primary">
                 <v-list>
-                    <v-list-group prepend-icon="local_activity" no-action>
+                    <v-list-group prepend-icon="local_activity" class="text-truncate" no-action>
                       <v-list-tile avatar slot="activator">
                         <v-list-tile-content>
                           <v-list-tile-title>{{wallet.walletBalance}}</v-list-tile-title>
-                          <v-list-tile-sub-title class="text-truncate">{{wallet.walletName}}</v-list-tile-sub-title>
-                        </v-list-tile-content>
-                        
+                          <v-list-tile-sub-title>{{wallet.walletName}}</v-list-tile-sub-title>
+                        </v-list-tile-content>                    
                       </v-list-tile>
                       <v-list-tile v-for= "(tile, i) in wallet.subListTiles" :key= "i" @click= "clicktransactions(tile, wallet, $event)">
                         <v-list-tile-title v-text= "tile[0]"></v-list-tile-title>
@@ -29,9 +28,53 @@
       <v-btn fab bottom right fixed dark color="red accent-3" @click= "userLogOut">
         <v-icon>chevron_left</v-icon>
       </v-btn>
-      <v-btn fab bottom left fixed dark color="indigo" @click= "addNewWallet">
-        <v-icon dark>add</v-icon>
-      </v-btn>
+      <v-btn  fab bottom left fixed dark color="indigo" @click= "addNewWallet">
+          <v-icon dark>add</v-icon>
+        </v-btn>
+      <v-dialog v-model= "dialogProgress" persistent max-width="500px">   
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Wallet</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="text-xs-center">
+            <v-progress-circular :size="50" :width="7" color="purple" indeterminate></v-progress-circular>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model= "dialogSuccess" persistent max-width="500px">   
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Success</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="text-xs-center">
+              <v-textarea v-model="walletPrivateKey" auto-grow box label="Private Key" rows="1" readonly success></v-textarea>
+              <v-textarea v-model="walletPublicKey" auto-grow box label="Pubilic Key" rows="1" readonly success></v-textarea>
+              <v-textarea v-model="walletAdress" auto-grow box label="Wallet Adress" rows="1" readonly success></v-textarea>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn flat color= "primary" @click= "confirmAddWallet">Confirm</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model= "dialogError" persistent max-width="500px">   
+        <v-card>
+          <v-card-title>
+            <span class="headline">Error</span>
+          </v-card-title>
+          <v-card-text>
+            <div class="text-xs-center">
+              <v-textarea v-model="errorMessage" auto-grow box label="Can't Add Wallet" rows="1" readonly error></v-textarea>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn flat color= "error" @click= "closeError">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 </v-content>
 
 </template>
@@ -47,6 +90,13 @@ Vue.use(Vuetify, {
 export default {
   name: "user-account",
   data: () => ({
+    dialogProgress: false,
+    dialogSuccess: false,
+    dialogError: false,
+    walletPrivateKey: '',
+    walletPublicKey: '',
+    walletAdress: '',
+    errorMessage: '',
     userName: '',
     userID: '',
     email: '',
@@ -74,8 +124,8 @@ export default {
         response.result.userWallets.forEach(wallet => {
           this.userWallets.push({
             walletID: wallet.walletID,
-            walletName: `Wallet ${wallet.walletAdress}`,
-            walletBalance: `Balance ${wallet.balance}`,
+            walletName: `Wallet: ${wallet.walletAdress}`,
+            walletBalance: `Balance: ${wallet.balance}`,
             subListTiles: this.subListTiles
           })
         })
@@ -103,14 +153,18 @@ export default {
       this.$router.go(-1);
     },
     addNewWallet() {
-      this.userWallets.push({
-        userName: "Wallet 2",
-        subListTiles: [
-          ["Account Details", "user"],
-          ["Transaction History", "history"],
-          ["Remove Wallet", "remove"]
-        ]
-      });
+      this.dialogProgress = true
+      setTimeout(() => {
+        this.dialogProgress = false
+        this.dialogError = true
+      }, 100)
+    },
+    confirmAddWallet() {
+      this.dialogSuccess = false
+      this.dialogProgress = false
+    },
+    closeError() {
+      this.dialogError = false
     }
   }
 };

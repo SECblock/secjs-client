@@ -4,7 +4,7 @@
       <v-data-table :headers= "headers" :items= "transactions" class="elevation-1">
         <template slot="items" slot-scope="props">
           <td>{{ props.item.amount }}</td>
-          <td class="text-xs-right">{{ props.item.from }}</p></td>
+          <td class="text-xs-right">{{ props.item.from }}</td>
           <td class="text-xs-right">{{ props.item.to }}</td>
         </template>
       </v-data-table>

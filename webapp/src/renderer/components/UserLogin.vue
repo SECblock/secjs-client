@@ -19,9 +19,50 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="primary" v-on:click = "onLoginClick">Login</v-btn>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+                  <v-btn slot="activator" dark color="primary">Create Account</v-btn>
+                  <v-card>
+                    <v-toolbar dark color="primary">
+                      <v-btn icon dark @click="dialog = false">
+                        <v-icon>close</v-icon>
+                      </v-btn>
+                      <v-toolbar-title>Build your Account</v-toolbar-title>
+                      <v-spacer></v-spacer>
+                      <v-toolbar-items>
+                        <v-btn dark flat @click.native="onSaveAccount">Create</v-btn>
+                      </v-toolbar-items>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-container grid-list-md>
+                        <v-layout wrap>
+                          <v-flex xs12>
+                            <v-text-field label="User Name" required></v-text-field>
+                          </v-flex>
+                          <v-flex xs12>
+                            <v-text-field label="Password" required></v-text-field>
+                          </v-flex>
+                          <v-flex xs12 sm6 md4>
+                            <v-text-field label="Legal first name" required></v-text-field>
+                          </v-flex>
+                          <v-flex xs12 sm6 md4>
+                            <v-text-field label="Legal last name" required></v-text-field>
+                          </v-flex>
+                        </v-layout>       
+                        <v-flex xs12>
+                          <v-text-field label="Email Adress" required></v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                          <v-text-field label="Mobil" required></v-text-field>
+                        </v-flex>
+                      </v-container>
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
               </v-card-actions>
             </v-card>
           </v-flex>
+          
         </v-layout>
       </v-container>
     </v-content>
@@ -33,10 +74,16 @@ import Vue from 'vue'
 
 export default {
   data: () => ({
+    dialog: false,
     drawer: null,
     username: '',
     password: '',
-    loginError: false
+    loginError: false,
+    createAccount: {
+      userName: '',
+      userPassword: '',
+
+    }
   }),
   methods: {
     onLoginClick: function(oEvent){
@@ -58,6 +105,9 @@ export default {
           }
         })
       }
+    },
+    onSaveAccount: function(oEvent) {
+
     }
   }
 }

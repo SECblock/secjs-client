@@ -4,7 +4,7 @@
       <v-content fill-height>
       <v-flex xs12 md12 sm12>
         <v-tabs
-  color="cyan"
+  color="primary"
   dark
   slider-color="yellow"
   centered
