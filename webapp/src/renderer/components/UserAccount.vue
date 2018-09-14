@@ -15,6 +15,7 @@
                       </v-list-tile>
                       <v-list-tile v-for= "(tile, i) in wallet.subListTiles" :key= "i" @click= "clicktransactions(tile, wallet, $event)">
                         <v-list-tile-title v-text= "tile[0]"></v-list-tile-title>
+                        <v-list-tile-action v-if= "tile[1] === 'account_circle' "><v-icon dark color="blue">{{tile[1]}}</v-icon></v-list-tile-action>
                         <v-list-tile-action v-if= "tile[1] === 'history' "><v-icon dark color="green">{{tile[1]}}</v-icon></v-list-tile-action>
                         <v-list-tile-action v-if= "tile[1] === 'remove' "><v-icon dark color="red">{{tile[1]}}</v-icon></v-list-tile-action>
                       </v-list-tile>
@@ -102,7 +103,7 @@ export default {
     email: '',
     telefon: '',
     subListTiles: [
-      ["Wallet Details", "user"],
+      ["Wallet Details", "account_circle"],
       ["Transaction History", "history"],
       ["Remove Wallet", "remove"]
     ],
@@ -142,11 +143,15 @@ export default {
   methods: {
     clicktransactions(tile, wallet, event) {
       let walletID = wallet.walletID
+      let walletName = wallet.walletName.split(': ')[1]
+      let walletBalance = wallet.walletBalance.split(': ')[1]
       if (tile[0] === "Transaction History") {
        this.$router.push({name: "transaction-history", params: {walletid: walletID}})
       } else if (tile[0] === "Remove Wallet") {
         console.log("click" + index)
         this.userWallets.splice(index, 1)
+      } else if (tile[0] === "Wallet Details") {
+        this.$router.push({name: "wallet-details", params: {walletid: walletID, walletaddress: walletName, walletbalance: walletBalance}})
       }
     },
     userLogOut() {
