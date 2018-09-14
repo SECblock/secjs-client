@@ -105,12 +105,17 @@ export default {
     setTimeout(() => {
       if (token){
         decoded = this.$JWT.verifyToken(token)
-        this._navToAccountDetail({
-          userID: decoded.userID,
-          username: decoded.username,
-          email: decoded.email,
-          telefon: decoded.telefon
-        })
+        if (decoded !== '') {
+            this._navToAccountDetail({
+            userID: decoded.userID,
+            username: decoded.username,
+            email: decoded.email,
+            telefon: decoded.telefon
+          })
+        } else {
+          this._userAuthRequest()
+        }
+        
       }
       this.busy = false
     }, 500);
@@ -121,7 +126,12 @@ export default {
   methods: {
     onLoginClick: function(oEvent){
       if (this.username !== "" && this.password !== "") {
-        this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
+        this._userAuthRequest()
+      }
+    },
+
+    _userAuthRequest: function(){
+      this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
           console.log(response)
           if (err) {
             this.loginError = true
@@ -139,7 +149,6 @@ export default {
             this.loginError = true
           }
         })
-      }
     },
 
     _navToAccountDetail: function(params) {
