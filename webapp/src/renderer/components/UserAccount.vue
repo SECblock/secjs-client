@@ -116,7 +116,7 @@ export default {
     this.telefon = this.$route.query.telefon
     this.$JsonRPCClient.request(
       "getUserWallets",
-      { userID: this.userID },
+      { token: window.localStorage.getItem('userToken') },
       (err, response) => {
         if (err) {
           return
@@ -150,6 +150,7 @@ export default {
       }
     },
     userLogOut() {
+      window.localStorage.removeItem('userToken')
       this.$router.go(-1);
     },
     addNewWallet() {

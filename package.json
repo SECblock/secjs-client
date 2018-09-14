@@ -25,5 +25,8 @@
   "homepage": "https://gitlab.com/MongoX-SEC/secjs-gui#README",
   "devDependencies": {
     "electron": "^2.0.3"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.3.0"
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-content>
-      <v-container fluid fill-height>
+      <v-container fluid fill-height v-if= "!busy">
         <v-layout justify-center>
           <v-flex xs12 sm10 md4>
             <v-card class="elevation-12">   
@@ -65,9 +65,19 @@
           
         </v-layout>
       </v-container>
+      <v-dialog persistent v-model= "busy" max-width= "200px">
+            <v-card>
+              <v-card-text>
+                <div class="text-xs-center">
+                <v-progress-circular :size="50" :width="7" color="purple" indeterminate></v-progress-circular>
+              </div>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
     </v-content>
   </v-app>
 </template>
+
 
 <script>
 import Vue from 'vue'
@@ -75,6 +85,7 @@ import Vue from 'vue'
 export default {
   data: () => ({
     dialog: false,
+    busy: false,
     drawer: null,
     username: '',
     password: '',
@@ -85,6 +96,28 @@ export default {
 
     }
   }),
+
+  created() {
+    this.busy = true
+    let token = window.localStorage.getItem('userToken')
+    let decoded
+
+    setTimeout(() => {
+      if (token){
+        decoded = this.$JWT.verifyToken(token)
+        this._navToAccountDetail({
+          userID: decoded.userID,
+          username: decoded.username,
+          email: decoded.email,
+          telefon: decoded.telefon
+        })
+      }
+      this.busy = false
+    }, 500);
+
+    
+  },
+
   methods: {
     onLoginClick: function(oEvent){
       if (this.username !== "" && this.password !== "") {
@@ -94,11 +127,13 @@ export default {
             this.loginError = true
             return
           }
-          if (response.result.status === 'success') {           
-            this.$router.push({
-              name: 'user-account', 
-              params: {user: response.result.account.userID}, 
-              query: {username: response.result.account.email, email: response.result.account.email, telefon: response.result.account.telefon}
+          if (response.result.status === 'success') {
+            window.localStorage.setItem('userToken', response.result.account.token)         
+            this._navToAccountDetail({
+              userID: response.result.account.userID,
+              username: response.result.account.username,
+              email: response.result.account.email,
+              telefon: response.result.account.telefon
             })
           } else {
             this.loginError = true
@@ -106,6 +141,15 @@ export default {
         })
       }
     },
+
+    _navToAccountDetail: function(params) {
+      this.$router.push({
+        name: 'user-account',
+        params: {user: params.userID},
+        query: {username: params.username, email: params.email, telefon: params.telefon}
+      })
+    },
+
     onSaveAccount: function(oEvent) {
 
     }
