@@ -150,6 +150,7 @@ export default {
               email: response.result.account.email,
               telefon: response.result.account.telefon
             })
+            this.$emit('successLog', response.result.account)
           } else {
             this.loginError = true
           }

@@ -16,11 +16,17 @@
   <v-tab ripple>
     Send Fund
   </v-tab>
+  <v-tab ripple>
+    UserInfo
+  </v-tab>
   <v-tab-item>
-    <router-view></router-view>
+    <router-view @successLog = "successLogFn"></router-view>
   </v-tab-item>
   <v-tab-item>
     <send-fund></send-fund>
+  </v-tab-item>
+    <v-tab-item>
+    <user-info :userName = "userName" :userID = "userID" :telefon = "telefon" :email = "email"></user-info>
   </v-tab-item>
 </v-tabs>
       </v-flex>
@@ -33,6 +39,7 @@
 import Vue from 'vue'
 import UserLogin from './components/UserLogin'
 import SendFund from './components/SendFund'
+import UserInfo from './components/UserInfo'
 import Vuetify from "vuetify"
 import "vuetify/dist/vuetify.min.css"
 
@@ -51,13 +58,26 @@ export default {
   name: "webapp",
   components: {
     UserLogin,
-    SendFund
+    SendFund,
+    UserInfo
   },
   data() {
     return {
       activeTab: 0,
       activeSubTab: 0,
-      showBooks: false
+      showBooks: false,
+      userName: '',
+      userID: '',
+      telefon: '',
+      email: ''
+    }
+  },
+  methods: {
+    successLogFn (data) {
+      this.userName = data.username
+      this.userID = data.userID
+      this.telefon = data.telefon
+      this.email = data.email
     }
   }
 }
