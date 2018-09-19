@@ -107,10 +107,7 @@ export default {
         decoded = this.$JWT.verifyToken(token)
         if (decoded !== '') {
             this._navToAccountDetail({
-            userID: decoded.userID,
-            username: decoded.username,
-            email: decoded.email,
-            telefon: decoded.telefon
+            userID: decoded.userID
           })
         } else {
           this._userAuthRequest()
@@ -131,7 +128,7 @@ export default {
     },
 
     _userAuthRequest: function(){
-      this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
+ this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
           console.log(response)
           if (err) {
             this.loginError = true
@@ -145,7 +142,6 @@ export default {
               email: response.result.account.email,
               telefon: response.result.account.telefon
             })
-            this.$emit('successLog', response.result.account)
           } else {
             this.loginError = true
           }
@@ -154,8 +150,8 @@ export default {
 
     _navToAccountDetail: function(params) {
       this.$router.push({
-        name: 'user-account',
-        params: {user: params.userID},
+        name: 'menu-header',
+        params: {userID: params.userID},
         query: {username: params.username, email: params.email, telefon: params.telefon}
       })
     },

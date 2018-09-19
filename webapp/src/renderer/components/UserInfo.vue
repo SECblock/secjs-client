@@ -21,7 +21,7 @@
         </v-layout>
       </v-layout>
     </v-container>
-    <v-btn fab bottom right fixed dark color="red accent-3" @click= "navBack">
+    <v-btn fab bottom right fixed dark color="red accent-3" @click= "userLogOut">
       <v-icon>chevron_left</v-icon>
     </v-btn>
   </v-content>
@@ -57,10 +57,9 @@ export default {
   },
 
   methods: {
-    navBack() {
-      this.$router.push({
-        name: 'user-login'
-      })
+    userLogOut() {
+      window.localStorage.removeItem('userToken')
+      this.$router.go(-2);
     },
     infoLoad (title) {
       var oMap = {

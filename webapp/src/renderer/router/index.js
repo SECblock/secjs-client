@@ -11,21 +11,29 @@ export default new Router({
       component: require('@/components/UserLogin').default
     },
     {
-      path: '/login/:user',
-      name: 'user-account',
-      component: require('@/components/UserAccount').default
-    },
-    {
-      path: '/transactions/:walletid',
-      name: 'transaction-history',
-      component: require('@/components/TransactionHistory').default,
-      props: true
-    },
-    {
-      path: '/details/:walletid',
-      name: 'wallet-details',
-      component: require('@/components/WalletDetails').default,
-      props: true
+      path: '/menu/:userID',
+      name: 'menu-header',
+      component: require('@/components/MenuHeader').default,
+      props: true,
+      children: [
+        {
+          path: '/',
+          name: 'user-account',
+          component: require('@/components/UserAccount').default
+        },
+        {
+          path: 'transactions/:walletid',
+          name: 'transaction-history',
+          component: require('@/components/TransactionHistory').default,
+          props: true
+        },
+        {
+          path: 'details/:walletid',
+          name: 'wallet-details',
+          component: require('@/components/WalletDetails').default,
+          props: true
+        }
+      ]
     },
     {
       path: '*',
