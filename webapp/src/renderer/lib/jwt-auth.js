@@ -1,4 +1,4 @@
-import {verify, sign, TokenExpiredError} from 'jsonwebtoken'
+import {verify} from 'jsonwebtoken'
 
 const key = 'MongoX-Block'
 

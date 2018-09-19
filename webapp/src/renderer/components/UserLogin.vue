@@ -30,50 +30,51 @@
                       <v-toolbar-title>Build your Account</v-toolbar-title>
                       <v-spacer></v-spacer>
                       <v-toolbar-items>
-                        <v-btn dark flat @click.native="onSaveAccount">Create</v-btn>
+                        <v-btn dark flat @click.native="onCreateAccount">Create</v-btn>
                       </v-toolbar-items>
                     </v-toolbar>
                     <v-card-text>
                       <v-container grid-list-md>
                         <v-layout wrap>
                           <v-flex xs12>
-                            <v-text-field label="User Name" required></v-text-field>
+                            <v-text-field v-model= "newUserAccount.userName" label="User Name" required></v-text-field>
                           </v-flex>
                           <v-flex xs12>
-                            <v-text-field label="Password" required></v-text-field>
+                            <v-text-field v-model= "newUserAccount.userPassword" label="Password" required></v-text-field>
                           </v-flex>
                           <v-flex xs12 sm6 md4>
-                            <v-text-field label="Legal first name" required></v-text-field>
+                            <v-text-field v-model= "newUserAccount.userFirstName" label="Legal first name"></v-text-field>
                           </v-flex>
                           <v-flex xs12 sm6 md4>
-                            <v-text-field label="Legal last name" required></v-text-field>
+                            <v-text-field v-model= "newUserAccount.userLastName" label="Legal last name"></v-text-field>
                           </v-flex>
                         </v-layout>       
                         <v-flex xs12>
-                          <v-text-field label="Email Adress" required></v-text-field>
+                          <v-text-field v-model= "newUserAccount.userEmail" label="Email Adress" required></v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                          <v-text-field label="Mobil" required></v-text-field>
+                          <v-text-field v-model= "newUserAccount.userTelefon" label="Mobil" required></v-text-field>
                         </v-flex>
                       </v-container>
+                      <v-divider></v-divider>
+                      <v-flex v-if= "createAccountError">Create Account failed. The Account already exists</v-flex>
                     </v-card-text>
                   </v-card>
                 </v-dialog>
               </v-card-actions>
             </v-card>
           </v-flex>
-          
         </v-layout>
       </v-container>
       <v-dialog persistent v-model= "busy" max-width= "200px">
-            <v-card>
-              <v-card-text>
-                <div class="text-xs-center">
-                <v-progress-circular :size="50" :width="7" color="purple" indeterminate></v-progress-circular>
-              </div>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
+        <v-card>
+          <v-card-text>
+            <div class="text-xs-center">
+            <v-progress-circular :size="50" :width="7" color="purple" indeterminate></v-progress-circular>
+            </div>
+            </v-card-text>
+        </v-card>
+      </v-dialog>
     </v-content>
   </v-app>
 </template>
@@ -90,10 +91,14 @@ export default {
     username: '',
     password: '',
     loginError: false,
-    createAccount: {
+    createAccountError: false,
+    newUserAccount: {
       userName: '',
       userPassword: '',
-
+      userFirstName: '',
+      userLastName: '',
+      userEmail: '',
+      userTelefon: ''
     }
   }),
 
@@ -159,8 +164,35 @@ export default {
       })
     },
 
-    onSaveAccount: function(oEvent) {
-
+    onCreateAccount: function(oEvent) {
+      let requestArgs = {
+        account: this.newUserAccount.userName,
+        password: this.newUserAccount.userPassword,
+        email: this.newUserAccount.userEmail,
+        telefon: this.newUserAccount.userTelefon
+      }
+      let decoded
+      this.busy = true
+      this.$JsonRPCClient.request('newAccount', requestArgs, (err, response) => {
+        if (err) {
+          this.busy = false
+          this.createAccountError = true
+        } else {
+          this.busy = false
+          decoded = this.$JWT.verifyToken(response.result.token)
+          if (decoded === '') {
+            this.createAccountError = true
+          } else {
+            //console.log(response)
+            this._navToAccountDetail({
+              userID: decoded.userID,
+              username: decoded.account,
+              email: decoded.email,
+              telefon: decoded.telefon
+            })
+          }        
+        }
+      })
     }
   }
 }
