@@ -98,10 +98,7 @@ export default {
     walletPublicKey: '',
     walletAdress: '',
     errorMessage: '',
-    userName: '',
     userID: '',
-    email: '',
-    telefon: '',
     subListTiles: [
       ["Wallet Details", "account_circle"],
       ["Transaction History", "history"],
@@ -111,10 +108,7 @@ export default {
   }),
 
   created() {
-    this.userID = this.$route.params.user
-    this.userName = this.$route.query.username
-    this.email = this.$route.query.email
-    this.telefon = this.$route.query.telefon
+    this.userID = this.$route.params.userID
     this.$JsonRPCClient.request(
       "getUserWallets",
       { token: window.localStorage.getItem('userToken') },
@@ -156,7 +150,7 @@ export default {
     },
     userLogOut() {
       window.localStorage.removeItem('userToken')
-      this.$router.go(-1);
+      this.$router.go(-2);
     },
     addNewWallet() {
       this.dialogProgress = true
