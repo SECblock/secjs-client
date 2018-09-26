@@ -3,7 +3,7 @@
     <v-layout column wrap justify-start>
         <v-layout row wrap md2>
           <v-flex xs6 md5>
-            <v-text-field label='From' append-icon='mdi-account' box>
+            <v-text-field label='From' append-icon='mdi-account' box v-model = "myWalletAddress">
             </v-text-field>
           </v-flex>
           <v-flex xs6 md5 offset-md2>
@@ -16,15 +16,21 @@
         <v-flex xs12 md5>
           <v-text-field label='Amount' append-icon='mdi-send' box v-model = "amount">
           </v-text-field>
+          <v-text-field label='Gas' append-icon='mdi-send' box v-model = "gas">
+          </v-text-field>
         </v-flex>
-        <v-flex xs12 md5>
-          <p>You want to pay {{ amount }}</p>  
-        </v-flex>
+        
+        
         <v-flex>
-          <v-btn color='info'>
+          <p>You want to pay {{ amount }} with gas {{gas}}</p>  
+          <v-alert :value="balanceError" type="error" transition="scale-transition">
+            You don't have enough balance. Current balance {{walletBalance}}.
+          </v-alert>
+          <v-btn color='info' round @click="sendTransaction">
             Send
           </v-btn>
         </v-flex>
+        
       </v-layout>
     </v-layout>
   </v-container>
@@ -39,11 +45,22 @@ Vue.use(Vuetify, {
 });
 
 export default {
+  props: ['myWalletAddress', "walletBalance"],
   data () {
     return {
-      amount: null
+      amount: null,
+      gas: null,
+      balanceError: false
     }
-    
+  },
+  methods: {
+    sendTransaction: function() {
+      if(this.amount > this.walletBalance) {
+        this.balanceError = true
+      } else {
+        this.balanceError = false
+      }
+    }
   }
 };
 </script>

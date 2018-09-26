@@ -23,7 +23,7 @@
     <router-view></router-view>
   </v-tab-item>
   <v-tab-item>
-    <send-fund :userID = "userID"></send-fund>
+    <send-fund :userID = "userID" :myWalletAddress = "walletAddress" :walletBalance = "walletBalance"></send-fund>
   </v-tab-item>
     <v-tab-item>
     <user-info :userName = "userName" :userID = "userID" :telefon = "telefon" :email = "email"></user-info>
@@ -62,7 +62,9 @@ export default {
       userName: '',
       userID: '',
       telefon: '',
-      email: ''
+      email: '',
+      walletAddress: '',
+      walletBalance: ''
     }
   },
   created() {
@@ -70,8 +72,8 @@ export default {
     this.userName = this.$route.query.username
     this.email = this.$route.query.email
     this.telefon = this.$route.query.telefon
-
-    this.$router.push({name: "user-account"})
+    this.walletAddress = this.$route.query.walletAddress
+    this.walletBalance = this.$route.query.walletBalance
   },
   methods: {
   }

@@ -38,7 +38,8 @@ export default {
           value: "name"
         },
         { text: "From",value: "from" },
-        { text: "To", value: "to" }
+        { text: "To", value: "to" },
+        { text: "Status", value: "status" }
       ],
       transactions: []
     }

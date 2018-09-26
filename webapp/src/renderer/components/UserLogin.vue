@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <v-content>
       <v-container fluid fill-height v-if= "!busy">
-        <v-layout justify-center>
+        <v-layout justify-center align-center>
           <v-flex xs12 sm10 md4>
             <v-card class="elevation-12">   
               <v-card-text>
@@ -11,10 +11,10 @@
                   <v-text-field id="password" v-model = "password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-card-text transition="slide-y-reverse-transition" v-if = "loginError">
-                <div>
+              <v-card-text v-if = "loginError">
+                <v-alert :value="loginError" type="error" transition="scale-transition">
                   Password or username is false.
-                </div>
+                </v-alert>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -107,21 +107,38 @@ export default {
     let token = window.localStorage.getItem('userToken')
     let decoded
 
+    // setTimeout(() => {
+    //   if (token){
+    //     decoded = this.$JWT.verifyToken(token)
+    //     if (decoded !== '' && decoded !== 'InvalidToken') {
+    //         this._navToAccountDetail({
+    //         userID: decoded.userID
+    //       })
+    //     }        
+    //   }
+    //   this.busy = false
+    // }, 500);
     setTimeout(() => {
-      if (token){
-        decoded = this.$JWT.verifyToken(token)
-        if (decoded !== '') {
-            this._navToAccountDetail({
-            userID: decoded.userID
-          })
+      if(token) {
+      this.$JsonRPCClient.request('userLoginWithToken', {token: token}, (err, response) => {
+        if(err) {
+          this.busy = false
         } else {
-          this._userAuthRequest()
-        }
-        
+          this.busy = false
+          this._navToAccountDetail({
+            userID: response.result.account.userID,
+            username: response.result.account.username,
+            email: response.result.account.email,
+            telefon: response.result.account.telefon,
+            publicKey: response.result.wallet.publicKey,
+            walletAddress: response.result.wallet.addressString,
+            walletBalance: response.result.wallet.balance
+            })
+          }
+        })
       }
       this.busy = false
-    }, 500);
-
+    }, 500)
     
   },
 
@@ -133,7 +150,7 @@ export default {
     },
 
     _userAuthRequest: function(){
- this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
+      this.$JsonRPCClient.request('userLogin', { account: this.username, password: this.password }, (err, response) => {
           console.log(response)
           if (err) {
             this.loginError = true
@@ -145,7 +162,10 @@ export default {
               userID: response.result.account.userID,
               username: response.result.account.username,
               email: response.result.account.email,
-              telefon: response.result.account.telefon
+              telefon: response.result.account.telefon,
+              publicKey: response.result.wallet.publicKey,
+              walletAddress: response.result.wallet.addressString,
+              walletBalance: response.result.wallet.balance
             })
           } else {
             this.loginError = true
@@ -155,9 +175,10 @@ export default {
 
     _navToAccountDetail: function(params) {
       this.$router.push({
-        name: 'menu-header',
-        params: {userID: params.userID},
-        query: {username: params.username, email: params.email, telefon: params.telefon}
+        name: 'user-account',
+        params: {userID: params.userID, userAddress: params.walletAddress, walletBalance: params.walletBalance},
+        query: {username: params.username, email: params.email, telefon: params.telefon,
+                publicKey: params.publicKey, walletAddress: params.walletAddress, walletBalance: params.walletBalance}
       })
     },
 
@@ -185,7 +206,10 @@ export default {
               userID: decoded.userID,
               username: decoded.account,
               email: decoded.email,
-              telefon: decoded.telefon
+              telefon: decoded.telefon,
+              publicKey: response.result.wallet.publicKey,
+              walletAdress: response.result.wallet.adressString,
+              walletBalance: response.result.wallet.balance
             })
           }        
         }

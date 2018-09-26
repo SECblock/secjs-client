@@ -11,7 +11,7 @@ export default new Router({
       component: require('@/components/UserLogin').default
     },
     {
-      path: '/menu/:userID',
+      path: '/menu/:userID/:userAddress/:walletBalance',
       name: 'menu-header',
       component: require('@/components/MenuHeader').default,
       props: true,

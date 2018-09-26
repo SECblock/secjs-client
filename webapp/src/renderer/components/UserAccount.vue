@@ -89,13 +89,14 @@ Vue.use(Vuetify, {
 });
 
 export default {
-  name: "user-account",
+  name: 'user-account',
   data: () => ({
     dialogProgress: false,
     dialogSuccess: false,
     dialogError: false,
     walletPrivateKey: '',
     walletPublicKey: '',
+    walletBalance: '',
     walletAdress: '',
     errorMessage: '',
     userID: '',
@@ -109,23 +110,30 @@ export default {
 
   created() {
     this.userID = this.$route.params.userID
-    this.$JsonRPCClient.request(
-      "getUserWallets",
-      { token: window.localStorage.getItem('userToken') },
-      (err, response) => {
-        if (err) {
-          return
-        }
-        response.result.userWallets.forEach(wallet => {
-          this.userWallets.push({
-            walletID: wallet.walletID,
-            walletName: `Wallet: ${wallet.walletAdress}`,
-            walletBalance: `Balance: ${wallet.balance}`,
-            subListTiles: this.subListTiles
-          })
-        })
-      }
-    )
+
+    this.userWallets.push({
+      walletID: this.userID,
+      walletName: `Wallet: ${this.$route.params.userAddress}`,
+      walletBalance: `Balance: ${this.$route.params.walletBalance}`,
+      subListTiles: this.subListTiles
+    })
+    // this.$JsonRPCClient.request(
+    //   "getUserWallets",
+    //   { token: window.localStorage.getItem('userToken') },
+    //   (err, response) => {
+    //     if (err) {
+    //       return
+    //     }
+    //     response.result.userWallets.forEach(wallet => {
+    //       this.userWallets.push({
+    //         walletID: wallet.walletID,
+    //         walletName: `Wallet: ${wallet.walletAdress}`,
+    //         walletBalance: `Balance: ${wallet.balance}`,
+    //         subListTiles: this.subListTiles
+    //       })
+    //     })
+    //   }
+    // )
   },
 
   computed: {
@@ -150,7 +158,7 @@ export default {
     },
     userLogOut() {
       window.localStorage.removeItem('userToken')
-      this.$router.go(-2);
+      this.$router.go(-1);
     },
     addNewWallet() {
       this.dialogProgress = true
