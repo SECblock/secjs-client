@@ -3,9 +3,9 @@
     <v-container>
       <v-data-table :headers= "headers" :items= "transactions" class="elevation-1">
         <template slot="items" slot-scope="props">
-          <td>{{ props.item.amount }}</td>
-          <td class="text-xs-right">{{ props.item.from }}</td>
-          <td class="text-xs-right">{{ props.item.to }}</td>
+          <td>{{ props.item.Value }}</td>
+          <td class="text-xs-right">{{ props.item.TxFrom }}</td>
+          <td class="text-xs-right">{{ props.item.TxTo }}</td>
         </template>
       </v-data-table>
     </v-container>
@@ -46,8 +46,9 @@ export default {
   },
 
   created() {
-    this.$JsonRPCClient.request('getTransactions', {walletID: this.walletid}, (err, response) => {
-      this.transactions = response.result.transactions
+    let userToken = window.localStorage.getItem('userToken')
+    this.$JsonRPCClient.request('getTokenTxForUser', {token: userToken, address: this.walletid}, (err, response) => {
+      this.transactions = response.result.info
     })
   },
 

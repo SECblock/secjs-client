@@ -7,7 +7,7 @@
             </v-text-field>
           </v-flex>
           <v-flex xs6 md5 offset-md2>
-            <v-text-field label='To' append-icon='mdi-account' box>
+            <v-text-field label='To' append-icon='mdi-account' box v-model = 'goalWalletAddress'>
             </v-text-field>
           </v-flex>
       </v-layout>
@@ -25,6 +25,9 @@
           <p>You want to pay {{ amount }} with gas {{gas}}</p>  
           <v-alert :value="balanceError" type="error" transition="scale-transition">
             You don't have enough balance. Current balance {{walletBalance}}.
+          </v-alert>
+          <v-alert :value="transactionSuccess" type="success" transition="scale-transition">
+            {{responseMessage}}.
           </v-alert>
           <v-btn color='info' round @click="sendTransaction">
             Send
@@ -50,15 +53,25 @@ export default {
     return {
       amount: null,
       gas: null,
-      balanceError: false
+      balanceError: false,
+      goalWalletAddress: null,
+      transactionSuccess: false,
+      responseMessage: ''
     }
   },
   methods: {
     sendTransaction: function() {
+      let userToken = window.localStorage.getItem('userToken')
       if(this.amount > this.walletBalance) {
         this.balanceError = true
       } else {
         this.balanceError = false
+        this.$JsonRPCClient.request('newTokenChainTx', {token: userToken, From: myWalletAddress, To: goalWalletAddress, value: amount, TxFee: gas}, (response) => {
+          if (response.result.status === 'true') {
+            this.transactionSuccess = true
+            this.responseMessage = response.result.info
+          }
+        })
       }
     }
   }
