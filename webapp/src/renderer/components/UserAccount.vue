@@ -153,7 +153,7 @@ export default {
         console.log("click" + index)
         this.userWallets.splice(index, 1)
       } else if (tile[0] === "Wallet Details") {
-        this.$router.push({name: "wallet-details", params: {walletid: walletID, walletaddress: walletName, walletbalance: walletBalance}})
+        this.$router.push({name: "wallet-details", params: {walletid: walletID}})
       }
     },
     userLogOut() {

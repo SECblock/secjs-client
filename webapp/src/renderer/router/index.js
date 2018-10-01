@@ -28,7 +28,7 @@ export default new Router({
           props: true
         },
         {
-          path: 'details/:walletid',
+          path: 'details',
           name: 'wallet-details',
           component: require('@/components/WalletDetails').default,
           props: true

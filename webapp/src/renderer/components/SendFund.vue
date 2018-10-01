@@ -51,8 +51,8 @@ export default {
   props: ['myWalletAddress', "walletBalance"],
   data () {
     return {
-      amount: null,
-      gas: null,
+      amount: 0,
+      gas: 0,
       balanceError: false,
       goalWalletAddress: null,
       transactionSuccess: false,
@@ -66,7 +66,7 @@ export default {
         this.balanceError = true
       } else {
         this.balanceError = false
-        this.$JsonRPCClient.request('newTokenChainTx', {token: userToken, From: myWalletAddress, To: goalWalletAddress, value: amount, TxFee: gas}, (response) => {
+        this.$JsonRPCClient.request('newTokenChainTx', {token: userToken, From: this.myWalletAddress, To: this.goalWalletAddress, value: this.amount, TxFee: this.gas}, (err, response) => {
           if (response.result.status === 'true') {
             this.transactionSuccess = true
             this.responseMessage = response.result.info

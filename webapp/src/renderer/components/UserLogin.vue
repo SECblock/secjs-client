@@ -40,7 +40,7 @@
                             <v-text-field v-model= "newUserAccount.userName" label="User Name" required></v-text-field>
                           </v-flex>
                           <v-flex xs12>
-                            <v-text-field v-model= "newUserAccount.userPassword" label="Password" required></v-text-field>
+                            <v-text-field v-model= "newUserAccount.userPassword" label="Password" type="password" required></v-text-field>
                           </v-flex>
                           <v-flex xs12 sm6 md4>
                             <v-text-field v-model= "newUserAccount.userFirstName" label="Legal first name"></v-text-field>
@@ -202,13 +202,14 @@ export default {
             this.createAccountError = true
           } else {
             //console.log(response)
+            window.localStorage.setItem('userToken', response.result.token)
             this._navToAccountDetail({
               userID: decoded.userID,
               username: decoded.account,
               email: decoded.email,
               telefon: decoded.telefon,
               publicKey: response.result.wallet.publicKey,
-              walletAdress: response.result.wallet.adressString,
+              walletAddress: response.result.wallet.addressString,
               walletBalance: response.result.wallet.balance
             })
           }        

@@ -39,12 +39,13 @@ Vue.use(Vuetify, {
 export default {
   name: "wallet-details",
   props: {
-    walletid: String,
+   
     walletaddress: String,
     walletbalance : String
   },
   data() {
     return {
+        walletid: null,
         aDetails: [
           { icon: 'account_box', iconClass: 'grey lighten-1 white--text', title: 'Address', subtitle: '' },
           { icon: 'account_balance_wallet', iconClass: 'grey lighten-1 white--text', title: 'Balance', subtitle: '' },
@@ -55,12 +56,20 @@ export default {
   },
 
   created() {
-    this.aDetails[0].subtitle = this.walletaddress
+    let userToken = window.localStorage.getItem('userToken')
+    console.log(this.$route.walletid)
+    console.log(this.$route)
+    this.walletid = this.$route.params.walletid
+    this.$JsonRPCClient.request('getPublicKey', {token: userToken}, (err, response) => {
+      this.aDetails[2].subtitle = response.result.publicKey
+    })
+    this.$JsonRPCClient.request('accountKey', {token: userToken}, (err, response) => {
+      this.aDetails[3].subtitle = response.result.privateKey
+    })
+
+
+    this.aDetails[0].subtitle = this.walletid
     this.aDetails[1].subtitle = this.walletbalance
-      this.$JsonRPCClient.request('getWalletKey', {walletID: this.walletid}, (err, response) => {
-        this.aDetails[2].subtitle = response[0]
-        this.aDetails[3].subtitle = response[1]
-      })
   },
 
   methods: {
