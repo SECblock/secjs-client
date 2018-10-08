@@ -6,6 +6,7 @@
           <td>{{ props.item.Value }}</td>
           <td class="text-xs-right">{{ props.item.TxFrom }}</td>
           <td class="text-xs-right">{{ props.item.TxTo }}</td>
+          <td class="text-xs-right" v-bind:style = "{color: props.item.statusColor}">{{ props.item.Status }}</td>
         </template>
       </v-data-table>
     </v-container>
@@ -32,23 +33,35 @@ export default {
   data() {
     return {
       headers: [
-        {
-          text: "Amount",
-          sortable: false,
-          value: "name"
-        },
+        { text: "Amount", sortable: false, value: "name"},
         { text: "From",value: "from" },
         { text: "To", value: "to" },
         { text: "Status", value: "status" }
       ],
-      transactions: []
+      transactions: [],
+      statusColor: null
     }
   },
 
   created() {
     let userToken = window.localStorage.getItem('userToken')
-    this.$JsonRPCClient.request('getTokenTxForUser', {token: userToken, address: this.walletid}, (err, response) => {
-      this.transactions = response.result.info
+    let txHistory = window.localStorage.getItem('tokenTransactions')
+    if (txHistory === null) {
+      txHistory = []
+    } else {
+      txHistory = JSON.parse(txHistory)
+    }
+    this.$JsonRPCClient.request('getTokenTxStatusByTxHash', {token: userToken, TxHash: txHistory}, (err, response) => {
+      for (let txInPool in response.result.transactionsInPool){
+        response.result.transactionsInPool[txInPool].Status = 'pending'
+        response.result.transactionsInPool[txInPool].statusColor = 'orange'
+        this.transactions.push(response.result.transactionsInPool[txInPool])
+      }
+      for (let txInChain in response.result.transactionsInChain) {
+        response.result.transactionsInChain[txInChain].Status = 'success'
+        response.result.transactionsInPool[txInPool].statusColor = 'green'
+        this.transactions.push(response.result.transactionsInChain[txInChain])
+      }
     })
   },
 

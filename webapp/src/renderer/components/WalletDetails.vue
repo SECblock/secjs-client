@@ -39,7 +39,6 @@ Vue.use(Vuetify, {
 export default {
   name: "wallet-details",
   props: {
-   
     walletaddress: String,
     walletbalance : String
   },
@@ -66,7 +65,13 @@ export default {
     this.$JsonRPCClient.request('accountKey', {token: userToken}, (err, response) => {
       this.aDetails[3].subtitle = response.result.privateKey
     })
-
+    this.$JsonRPCClient.request('getBlance', {token: userToken}, (err, response) => {
+      if (err) {
+        this.aDetails[1].subtitle = 'NAN'
+      } else {
+        this.aDetails[1].subtitle = response.result.userBalance
+      }
+    })
 
     this.aDetails[0].subtitle = this.walletid
     this.aDetails[1].subtitle = this.walletbalance

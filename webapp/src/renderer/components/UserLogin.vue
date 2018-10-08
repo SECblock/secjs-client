@@ -121,7 +121,7 @@ export default {
     setTimeout(() => {
       if(token) {
       this.$JsonRPCClient.request('userLoginWithToken', {token: token}, (err, response) => {
-        if(err) {
+        if(err || response.result.status === 'InvalidToken') {
           this.busy = false
         } else {
           this.busy = false

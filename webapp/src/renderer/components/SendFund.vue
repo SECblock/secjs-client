@@ -56,12 +56,18 @@ export default {
       balanceError: false,
       goalWalletAddress: null,
       transactionSuccess: false,
-      responseMessage: ''
+      responseMessage: '',
+      txHashBuffer: []
     }
   },
   methods: {
     sendTransaction: function() {
       let userToken = window.localStorage.getItem('userToken')
+      if (window.localStorage.getItem('tokenTransactions') && window.localStorage.getItem('tokenTransactions') != '') {
+        this.txHashBuffer = JSON.parse(window.localStorage.getItem('tokenTransactions'))
+      } else {
+        this.txHashBuffer = []
+      }
       if(this.amount > this.walletBalance) {
         this.balanceError = true
       } else {
@@ -69,6 +75,8 @@ export default {
         this.$JsonRPCClient.request('newTokenChainTx', {token: userToken, From: this.myWalletAddress, To: this.goalWalletAddress, value: this.amount, TxFee: this.gas}, (err, response) => {
           if (response.result.status === 'true') {
             this.transactionSuccess = true
+            this.txHashBuffer.push(response.result.tokenTxHash)
+            window.localStorage.setItem('tokenTransactions', JSON.stringify(this.txHashBuffer))
             this.responseMessage = response.result.info
           }
         })
