@@ -9,7 +9,7 @@
                     <v-list-group prepend-icon="local_activity" class="text-truncate" no-action>
                       <v-list-tile avatar slot="activator">
                         <v-list-tile-content>
-                          <v-list-tile-title>{{wallet.walletBalance}}</v-list-tile-title>
+                          <v-list-tile-title>Balance: {{walletBalance}}</v-list-tile-title>
                           <v-list-tile-sub-title>{{wallet.walletName}}</v-list-tile-sub-title>
                         </v-list-tile-content>                    
                       </v-list-tile>
@@ -83,10 +83,13 @@
 <script>
 import Vue from "vue";
 import Vuetify from "vuetify";
+import {EventBus} from "../lib/EventBus.js"
 
 Vue.use(Vuetify, {
   iconfont: "mdi"
 });
+
+
 
 export default {
   name: 'user-account',
@@ -108,32 +111,22 @@ export default {
     userWallets: []
   }),
 
+  mounted() {
+    EventBus.$on('updateUserBalance', function (userBalance) {
+      this.walletBalance = this.walletBalance - userBalance
+      console.log(userBalance)
+    }.bind(this))
+  },
+
   created() {
     this.userID = this.$route.params.userID
-
+    this.walletBalance = this.$route.params.walletBalance
     this.userWallets.push({
       walletID: this.userID,
       walletName: `Wallet: ${this.$route.params.userAddress}`,
-      walletBalance: `Balance: ${this.$route.params.walletBalance}`,
+      walletBalance: `Balance: ${this.walletBalance}`,
       subListTiles: this.subListTiles
     })
-    // this.$JsonRPCClient.request(
-    //   "getUserWallets",
-    //   { token: window.localStorage.getItem('userToken') },
-    //   (err, response) => {
-    //     if (err) {
-    //       return
-    //     }
-    //     response.result.userWallets.forEach(wallet => {
-    //       this.userWallets.push({
-    //         walletID: wallet.walletID,
-    //         walletName: `Wallet: ${wallet.walletAdress}`,
-    //         walletBalance: `Balance: ${wallet.balance}`,
-    //         subListTiles: this.subListTiles
-    //       })
-    //     })
-    //   }
-    // )
   },
 
   computed: {

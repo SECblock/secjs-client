@@ -42,6 +42,7 @@
 <script>
 import Vue from "vue";
 import Vuetify from "vuetify";
+import {EventBus} from "../lib/EventBus.js"
 
 Vue.use(Vuetify, {
   iconfont: "mdi"
@@ -72,16 +73,20 @@ export default {
         this.balanceError = true
       } else {
         this.balanceError = false
+
         this.$JsonRPCClient.request('newTokenChainTx', {token: userToken, From: this.myWalletAddress, To: this.goalWalletAddress, value: this.amount, TxFee: this.gas}, (err, response) => {
           if (response.result.status === 'true') {
             this.transactionSuccess = true
             this.txHashBuffer.push(response.result.tokenTxHash)
             window.localStorage.setItem('tokenTransactions', JSON.stringify(this.txHashBuffer))
             this.responseMessage = response.result.info
+            EventBus.$emit('updateUserBalance', this.amount)
           }
         })
       }
+      
     }
+    
   }
 };
 </script>
